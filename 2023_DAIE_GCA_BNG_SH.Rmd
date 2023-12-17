@@ -31,6 +31,36 @@ dataFromExperimental <- read.csv("GROUP_7_2023_GCA_RESULTS_EXPERIMENTAL.csv")
 
 summary(dataFromControl)
 summary(dataFromExperimental)
+
+cleanControl = dataFromControl
+cleanControl <- cleanControl[cleanControl$pretrial_GAD >= 0, ]
+cleanControl <- cleanControl[cleanControl$posttrial_GAD >= 0, ]
+
+boxplot(cleanControl$pretrial_GAD,cleanControl$posttrial_GAD)
+mean(cleanControl$pretrial_GAD)
+mean(cleanControl$posttrial_GAD)
+sd(cleanControl$pretrial_GAD)
+sd(cleanControl$posttrial_GAD)
+length(cleanControl$patientID)
+shapiro.test(cleanControl$pretrial_GAD)
+shapiro.test(cleanControl$posttrial_GAD)
+plot(density(cleanControl$pretrial_GAD))
+plot(density(cleanControl$posttrial_GAD))
+
+cleanExperimental = dataFromExperimental
+cleanExperimental <- cleanExperimental[cleanExperimental$pretrial_GAD >= 0, ]
+cleanExperimental <- cleanExperimental[cleanExperimental$posttrial_GAD >= 0, ]
+
+boxplot(cleanControl$pretrial_GAD,cleanControl$posttrial_GAD)
+mean(cleanExperimental$pretrial_GAD)
+mean(cleanExperimental$posttrial_GAD)
+sd(cleanExperimental$pretrial_GAD)
+sd(cleanExperimental$posttrial_GAD)
+length(cleanExperimental$patientID)
+shapiro.test(cleanExperimental$pretrial_GAD)
+shapiro.test(cleanExperimental$posttrial_GAD)
+plot(density(cleanExperimental$pretrial_GAD))
+plot(density(cleanExperimental$posttrial_GAD))
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
