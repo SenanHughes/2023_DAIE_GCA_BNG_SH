@@ -29,29 +29,49 @@ setwd("C:/Users/senan/OneDrive/Documents/Masters in Computing in Computer Animat
 dataFromControl <- read.csv("GROUP_7_2023_GCA_RESULTS_CONTROL.csv")
 dataFromExperimental <- read.csv("GROUP_7_2023_GCA_RESULTS_EXPERIMENTAL.csv")
 
-summary(dataFromControl)
-summary(dataFromExperimental)
-
+### Here the Control data is cleaned up to remove any values that are not possible - i.e GAD scores less than 0 or above 21 and STAI scores less than 20 and greater than 80
 cleanControl = dataFromControl
-cleanControl <- cleanControl[cleanControl$pretrial_GAD >= 0, ]
-cleanControl <- cleanControl[cleanControl$posttrial_GAD >= 0, ]
+cleanControl <- cleanControl[cleanControl$pretrial_GAD >= 0 & cleanControl$pretrial_GAD <= 21, ]
+cleanControl <- cleanControl[cleanControl$posttrial_GAD >= 0 & cleanControl$posttrial_GAD <= 21, ]
+cleanControl <- cleanControl[cleanControl$pretrial_STAI >= 20 & cleanControl$pretrial_STAI <= 80, ]
+cleanControl <- cleanControl[cleanControl$posttrial_STAI >= 20 & cleanControl$posttrial_STAI <= 80, ]
 
-boxplot(cleanControl$pretrial_GAD,cleanControl$posttrial_GAD)
-mean(cleanControl$pretrial_GAD)
-mean(cleanControl$posttrial_GAD)
+### The above is repeated for the Experimental Data
+cleanExperimental = dataFromExperimental
+cleanExperimental <- cleanExperimental[cleanExperimental$pretrial_GAD >= 0 & cleanExperimental$pretrial_GAD <= 21, ]
+cleanExperimental <- cleanExperimental[cleanExperimental$posttrial_GAD >= 0 & cleanExperimental$posttrial_GAD <= 21, ]
+cleanExperimental <- cleanExperimental[cleanExperimental$pretrial_STAI >= 20 & cleanExperimental$pretrial_STAI <= 80, ]
+cleanExperimental <- cleanExperimental[cleanExperimental$posttrial_STAI >= 20 & cleanExperimental$posttrial_STAI <= 80, ]
+
+### A column containing the difference between the pre & post trial scores is created for both the Control and Experimental data for compararative analysis
+cleanControl["GAD_differenceCol"] <- cleanControl$pretrial_GAD - cleanControl$posttrial_GAD
+cleanControl["STAI_differenceCol"] <- cleanControl$pretrial_STAI - cleanControl$posttrial_STAI
+cleanExperimental["GAD_differenceCol"] <- cleanExperimental$pretrial_GAD - cleanExperimental$posttrial_GAD
+cleanExperimental["STAI_differenceCol"] <- cleanExperimental$pretrial_STAI - cleanExperimental$posttrial_STAI
+
+# Calculations
+meanControlDiff_GAD <- mean(cleanControl$GAD_differenceCol)
+meanExperimentalDiff_GAD <- mean(cleanExperimental$GAD_differenceCol)
+sdControlDiff_GAD <- sd(cleanControl$GAD_differenceCol)
+sdExperimentalDiff_GAD <- sd(cleanExperimental$GAD_differenceCol)
+#GAD_tScore <- 
+
+
+
+
 sd(cleanControl$pretrial_GAD)
 sd(cleanControl$posttrial_GAD)
 length(cleanControl$patientID)
 shapiro.test(cleanControl$pretrial_GAD)
 shapiro.test(cleanControl$posttrial_GAD)
-plot(density(cleanControl$pretrial_GAD))
-plot(density(cleanControl$posttrial_GAD))
+shapiro.test(cleanControl$pretrial_STAI)
+shapiro.test(cleanControl$posttrial_STAI)
+mean(cleanControl$pretrial_STAI)
+mean(cleanControl$posttrial_STAI)
+sd(cleanControl$pretrial_STAI)
+sd(cleanControl$posttrial_STAI)
 
-cleanExperimental = dataFromExperimental
-cleanExperimental <- cleanExperimental[cleanExperimental$pretrial_GAD >= 0, ]
-cleanExperimental <- cleanExperimental[cleanExperimental$posttrial_GAD >= 0, ]
-
-boxplot(cleanControl$pretrial_GAD,cleanControl$posttrial_GAD)
+#EXPERIMENTAL CALCS
 mean(cleanExperimental$pretrial_GAD)
 mean(cleanExperimental$posttrial_GAD)
 sd(cleanExperimental$pretrial_GAD)
@@ -59,8 +79,34 @@ sd(cleanExperimental$posttrial_GAD)
 length(cleanExperimental$patientID)
 shapiro.test(cleanExperimental$pretrial_GAD)
 shapiro.test(cleanExperimental$posttrial_GAD)
+mean(cleanExperimental$pretrial_STAI)
+mean(cleanExperimental$posttrial_STAI)
+sd(cleanExperimental$pretrial_STAI)
+sd(cleanExperimental$posttrial_STAI)
+length(cleanExperimental$patientID)
+shapiro.test(cleanExperimental$pretrial_STAI)
+shapiro.test(cleanExperimental$posttrial_STAI)
+
+
+#CONTROL PLOTS
+boxplot(cleanControl$pretrial_GAD,cleanControl$posttrial_GAD)
+boxplot(cleanControl$pretrial_STAI,cleanControl$posttrial_STAI)
+plot(density(cleanControl$pretrial_GAD))
+plot(density(cleanControl$posttrial_GAD))
+plot(density(cleanControl$pretrial_STAI))
+plot(density(cleanControl$posttrial_STAI))
+
+#EXPERIMENTAL PLOTS
+boxplot(cleanExperimental$pretrial_GAD,cleanExperimental$posttrial_GAD)
+boxplot(cleanExperimental$pretrial_STAI,cleanExperimental$posttrial_STAI)
 plot(density(cleanExperimental$pretrial_GAD))
 plot(density(cleanExperimental$posttrial_GAD))
+plot(density(cleanExperimental$pretrial_STAI))
+plot(density(cleanExperimental$posttrial_STAI))
+
+
+summary(cleanControl)
+summary(cleanExperimental)
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
