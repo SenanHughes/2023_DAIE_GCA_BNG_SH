@@ -1,30 +1,16 @@
 ---
 title: "2023_DAIE_GCA_BNG_SH"
-output: html_notebook
+author: "Bróna Nic Gabhann, Senan Hughes"
+output: 
+  html_document:
+    toc: true
+    number_sections: true
+    theme: united
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+```{r, echo=FALSE, results='hide'}
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
-
-
-Table of Contents
-
-Abstract
-
-Introduction
-
-Method
-
-Results
-
-Discussion
-
-References
-
-```{r}
-
-setwd("C:/Users/senan/OneDrive/Documents/Masters in Computing in Computer Animation/DAIE/GCA_GAD_and_VR_Group7")
+setwd("C:/Users/Senan/OneDrive/Documents/Masters in Computing in Computer Animation/DAIE/GCA_GAD_and_VR_Group7")
 
 dataFromControl <- read.csv("GROUP_7_2023_GCA_RESULTS_CONTROL.csv")
 dataFromExperimental <- read.csv("GROUP_7_2023_GCA_RESULTS_EXPERIMENTAL.csv")
@@ -54,9 +40,23 @@ meanControlDiff_GAD <- mean(cleanControl$GAD_differenceCol)
 meanExperimentalDiff_GAD <- mean(cleanExperimental$GAD_differenceCol)
 sdControlDiff_GAD <- sd(cleanControl$GAD_differenceCol)
 sdExperimentalDiff_GAD <- sd(cleanExperimental$GAD_differenceCol)
-#GAD_tScore <- 
+sizeOfControlSample <- length(cleanControl)
+sizeOfExperimentalSample <- length(cleanExperimental)
+GAD_tScore <- ((meanControlDiff_GAD - meanExperimentalDiff_GAD) - 0)/sqrt((sdControlDiff_GAD)^2/sizeOfControlSample+(sdExperimentalDiff_GAD)^2/sizeOfExperimentalSample)
+dfForPValue = sizeOfControlSample + sizeOfExperimentalSample - 2
 
+GAD_pValue = pt(GAD_tScore, dfForPValue)
 
+meanControlDiff_STAI <- mean(cleanControl$STAI_differenceCol)
+meanExperimentalDiff_STAI <- mean(cleanExperimental$STAI_differenceCol)
+sdControlDiff_STAI <- sd(cleanControl$STAI_differenceCol)
+sdExperimentalDiff_STAI <- sd(cleanExperimental$STAI_differenceCol)
+sizeOfControlSample <- length(cleanControl)
+sizeOfExperimentalSample <- length(cleanExperimental)
+STAI_tScore <- ((meanControlDiff_STAI - meanExperimentalDiff_STAI) - 0)/sqrt((sdControlDiff_STAI)^2/sizeOfControlSample+(sdExperimentalDiff_STAI)^2/sizeOfExperimentalSample)
+dfForPValue = sizeOfControlSample + sizeOfExperimentalSample - 2
+
+STAI_pValue = pt(STAI_tScore, dfForPValue)
 
 
 sd(cleanControl$pretrial_GAD)
@@ -86,32 +86,111 @@ sd(cleanExperimental$posttrial_STAI)
 length(cleanExperimental$patientID)
 shapiro.test(cleanExperimental$pretrial_STAI)
 shapiro.test(cleanExperimental$posttrial_STAI)
+```
 
+# Abstract
+The aim of this study is to explore the hypothesis that states “Virtual Reality Therapy offers a significant improvement in symptoms of Generalised Anxiety Disorder when compared against traditional Cognitive Behavioural therapy.”
+
+Cognitive Behavioural Therapy has been the traditional treatment method for anxiety disorders such as social anxiety, post-traumatic stress disorder, generalised anxiety disorder, panic disorders, etc. 
+
+This experiment consists of a sample group of 180 male and female individuals with Generalised Anxiety Disorder, aged 18-40. They were split into two groups of 90, control and experimental, to test the results of VR based treatments against traditional Cognitive Behavioural Therapy. Candidates recorded GAD and STAI levels both pre-trial and post trial for both groups.
+
+A series of tests were run to define values such as mean, standard deviation etc, to aid in coming to a conclusion. The findings suggest that VR therapy is a decent alternative to traditional CBT therapy for Generalised Anxiety disorder. In an example of VR based therapy, Opris et al. demonstrated that VR exposure therapy (VRET) significantly reduced post-traumatic stress disorder symptoms in military personnel.^1^  Additionally, a study by Maples-Keller et al. (2017) found that VRET can be as 1 effective as in vivo exposure for the treatment of acrophobia.^2^  Furthermore, Lindner et al. (2017) showcased the potential of using VR in treating social anxiety disorders, particularly in enhancing public speaking skills.^3^
+
+# Introduction
+According to the World Health Organization, as of 2019, approximately 301 million people worldwide suffer from anxiety disorders.^4^  These can include disorders such as generalised anxiety disorder, panic disorder, specific phobias, agoraphobia, social anxiety disorder, and separation anxiety disorder. Symptoms of anxiety can range from feelings of fear and panic, a racing heart and shakiness, being irritable, having difficulty getting to sleep or staying asleep, tense muscles, etc.^5^
+
+VR Based therapy has been developed into a modern tool capable of use in therapy for treatment of anxiety disorders. The therapy offers immersive experiences used to combat triggers of anxiety from within a safe environment, allowing for patients to gradually become desensitised and habituation towards their triggers. 
+
+# Experiment Details
+Data from a study are presented that investigated the effect of VR exposure therapy, conducted in a virtual reality environment, on psychotherapy patients undergoing treatment for GAD. The study consisted of 180 patients (M=96, F=84) in total, divided into the groups listed below. The participants were randomly sampled from the clinic client list and randomly assigned to one of two groups below:
+
+* Control (traditional CBT, no VR) (M=48, F=42)
+* Experimental (VR-based therapy) (M=48, F=42)
+
+All patients were adults in the age range of 18 - 40 years. Information on the exact age of participants was not recorded. Gender information was recorded. All groups were of equal size. The two groups underwent 12 weeks of treatment for 50 minutes per week with a therapist. During that time the patients either underwent traditional CBT or used the VR app. GAD measurements for all groups were measured using the two self-report mechanisms outlined above. Measurements were taken at the start and end of the study.
+
+# Method
+An alternate hypothesis was formulated stating “Virtual Reality Therapy offers a significant improvement in symptoms of Generalised Anxiety Disorder when compared against traditional Cognitive Behavioural therapy.”
+
+Using the data provided, the given data was cleaned^6^ by removing impossible test results, eg. Results less than or greater than achievable in the STAI & GAD Tests. This provides a more accurate representation of the results from the experiment.
+
+After the data was cleaned, the data was tested to see whether or not the distribution was normal using the Shapiro-Wilk normality test and a visualisation in histogram format.^7^ The findings show that, given the p-value is above 0.05, for the STAI data it is distributed normally, signifying the sample size is large enough hand analysis can continue. While the GAD pre-trial data in both the Control & Experimental data sets was not normally distributed so it was discounted for this assessment.
+
+```{r, echo=FALSE, results='hide'}
+par(mfrow = c(1,2))
+
+hist(cleanControl$pretrial_STAI, main = "Pre-Trial Control STAI", xlab = "STAI Self-Assess Score", ylab = "Number of People", col = "papayawhip", border = "hotpink")
+hist(cleanControl$posttrial_STAI, main = "Post-Trial Control STAI", xlab = "STAI Self-Assess Score", ylab = "Number of People", col = "papayawhip", border = "hotpink")
+
+hist(cleanExperimental$pretrial_STAI, main = "Pre-Trial Experimental STAI", xlab = "STAI Self-Assess Score", ylab = "Number of People", col = "lightskyblue1", border = "orchid3")
+hist(cleanExperimental$posttrial_STAI, main = "Post-Trial Experimental STAI", xlab = "STAI Self-Assess Score", ylab = "Number of People", col = "lightskyblue1", border = "orchid3")
+```
+
+
+The STAI data was analysed and Box plots were produced along with the mean, standard deviation, and sample size recorded for both sets of data. From these data points, the null hypothesis (H~0~) and alternate hypothesis (H~A~) was defined, where $\bar{x}$ control ≠ $\bar{x}$ experimental, $\bar{x}$ control < $\bar{x}$ experimental respectively.
+
+When H~0~ and H~A~ were defined, the t-score was calculated for both the STAI results, and the p-value determined given a confidence Interval of 95%, and an $\alpha$ of 0.05, the final p-values for both GAD and STAI results fall under 0.05, meaning we can reject the null hypothesis (H~0~).
+
+# Results
+Beginning with the box plots, the mean difference in recorded anxiety levels pre-trial and post-trial from both control and experiment groups, already showcases a more significant change in anxiety levels within the experiment group. These results look promising; however, this assumption must be proven with more calculation.
+
+```{r, echo=FALSE, results='hide'}
+#BOX PLOTS
+boxplot(cleanControl$pretrial_STAI,cleanControl$posttrial_STAI, main = "Control Pre vs Post Trial STAI Box Plot", names = c("Pre-Trial", "Post-Trial"), ylab = "STAI Self-Assess Score", col = "papayawhip", border = "hotpink")
+
+boxplot(cleanExperimental$pretrial_STAI,cleanExperimental$posttrial_STAI, main = "Experimental Pre vs Post Trial STAI Box Plot", names = c("Pre-Trial", "Post-Trial"), ylab = "STAI Self-Assess Score", col = "lightskyblue1", border = "orchid3")
+```
+
+A t-score was calculated comparing the mean difference of the STAI results with the following result:
+```{r, echo = FALSE} 
+cat(STAI_tScore)
+```
+
+Once the t-score was found, the p-value was calculated for the STAI results:
+```{r, echo = FALSE} 
+cat(STAI_pValue)
+```
+
+Given a confidence interval of 95%, and an $\alpha$ of 0.05, the p-values calculated fall below the $\alpha$ of 0.05, meaning that we reject the null hypothesis(H~0~).
+
+# Discussion
+The hypothesis states that VR based treatment proves more effective in providing significant improvement in symptoms when used as treatment for patients with Generalised Anxiety Disorder when compared to the traditional Cognitive Behavioural Therapy treatment. The results show that the null hypothesis can be rejected in the case of this data sample.
+
+Although gender was recorded, and an age range defined, these variables were not blocked for both when designing the experiment, and when evaluating the results. Many other variables were not considered that may have an affect a person’s anxiety, such as employment status, parental status, income, educational status, etc. 
+
+Reflecting on the data that was given, it can be assumed that both groups were randomly assigned without bias, and with utmost simplicity. Due to the nature of the design of the experiment, it is likely that it is simple enough to be run again, as there are few requirements that need to be met in order to be eligible to take part. Running the experiment multiple times can help to solidify the rejection of the null hypothesis.
+
+# References
+1. Bause, O. & Bouchard, S., 2014. Moving from virtual reality exposure-based therapy to augmented reality exposure-based therapy: a review. Frontiers in human neuroscience.
+2. data technik, 2019. R-bloggers. [Online] 
+Available at: https://www.r-bloggers.com/2019/08/shapiro-wilk-test-for-normality-in-r/
+3. geetansh, 2023. Data Cleaning in R. [Online] 
+Available at: https://www.geeksforgeeks.org/data-cleaning-in-r/
+4. Lindner, P. et al., 2017. Creating state of the art, next-generation Virtual Reality exposure therapies for anxiety disorders using consumer hardware platforms: design considerations and future directions. Cognitive Behaviour Therapy.
+5. Maples-Keller, J. L., Bunnell, B. E., Kim, S.-J. & Rothbaum, B. O., 2017. The Use of Virtual Reality Technology in the Treatment of Anxiety and Other Psychiatric Disorders. Harvard Review of Psychiatry.
+6. NHS, n.d. Signs of an anxiety disorder. [Online] 
+Available at: https://www.nhs.uk/mental-health/feelings-symptoms-behaviours/feelings-and-symptoms/anxiety-disorder-signs/
+7. World Health Organization, n.d. Anxiety disorders. [Online] 
+Available at: https://www.who.int/news-room/fact-sheets/detail/anxiety-disorders
+
+
+
+```{r, echo=FALSE, results='hide', fig.show = 'hide'}
 
 #CONTROL PLOTS
 boxplot(cleanControl$pretrial_GAD,cleanControl$posttrial_GAD)
 boxplot(cleanControl$pretrial_STAI,cleanControl$posttrial_STAI)
-plot(density(cleanControl$pretrial_GAD))
-plot(density(cleanControl$posttrial_GAD))
-plot(density(cleanControl$pretrial_STAI))
-plot(density(cleanControl$posttrial_STAI))
+hist(cleanControl$pretrial_GAD)
+hist(cleanControl$posttrial_GAD)
+hist(cleanControl$pretrial_STAI)
+hist(cleanControl$posttrial_STAI)
 
 #EXPERIMENTAL PLOTS
 boxplot(cleanExperimental$pretrial_GAD,cleanExperimental$posttrial_GAD)
 boxplot(cleanExperimental$pretrial_STAI,cleanExperimental$posttrial_STAI)
-plot(density(cleanExperimental$pretrial_GAD))
-plot(density(cleanExperimental$posttrial_GAD))
-plot(density(cleanExperimental$pretrial_STAI))
-plot(density(cleanExperimental$posttrial_STAI))
-
-
-summary(cleanControl)
-summary(cleanExperimental)
+hist(cleanExperimental$pretrial_GAD)
+hist(cleanExperimental$posttrial_GAD)
+hist(cleanExperimental$pretrial_STAI)
+hist(cleanExperimental$posttrial_STAI)
 ```
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
-
