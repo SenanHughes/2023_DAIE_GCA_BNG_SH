@@ -36,12 +36,12 @@ cleanControl["STAI_differenceCol"] <- cleanControl$pretrial_STAI - cleanControl$
 cleanExperimental["GAD_differenceCol"] <- cleanExperimental$pretrial_GAD - cleanExperimental$posttrial_GAD
 cleanExperimental["STAI_differenceCol"] <- cleanExperimental$pretrial_STAI - cleanExperimental$posttrial_STAI
 
-# The t test function is run to determine if the improvement in the STAI and GAD scores means the null hypothesis can be rejected
+### The t test function is run to determine if the improvement in the STAI and GAD scores means the null hypothesis can be rejected
 STAI_tScore <- t.test(cleanControl$STAI_differenceCol, cleanExperimental$STAI_differenceCol)
 GAD_tScore <- t.test(cleanControl$GAD_differenceCol, cleanExperimental$GAD_differenceCol)
 
 
-# Shapiro-Wilks test is run
+### Shapiro-Wilks test is run
 cleanControlPreTrialGAD_SWT <- shapiro.test(cleanControl$pretrial_GAD)
 cleanControlPostTrialGAD_SWT <- shapiro.test(cleanControl$posttrial_GAD)
 cleanControlPreTrialSTAI_SWT <- shapiro.test(cleanControl$pretrial_STAI)
@@ -80,24 +80,38 @@ An alternate hypothesis was formulated stating “Virtual Reality Therapy offers
 
 Using the data provided, the given data was cleaned^6^ by removing impossible test results, eg. Results less than or greater than achievable in the STAI & GAD Tests. This provides a more accurate representation of the results from the experiment.
 
+```{r, results = 'hide'}
+cleanControl = dataFromControl
+cleanControl <- cleanControl[cleanControl$pretrial_GAD >= 0 & cleanControl$pretrial_GAD <= 21, ]
+cleanControl <- cleanControl[cleanControl$posttrial_GAD >= 0 & cleanControl$posttrial_GAD <= 21, ]
+cleanControl <- cleanControl[cleanControl$pretrial_STAI >= 20 & cleanControl$pretrial_STAI <= 80, ]
+cleanControl <- cleanControl[cleanControl$posttrial_STAI >= 20 & cleanControl$posttrial_STAI <= 80, ]
+
+cleanExperimental = dataFromExperimental
+cleanExperimental <- cleanExperimental[cleanExperimental$pretrial_GAD >= 0 & cleanExperimental$pretrial_GAD <= 21, ]
+cleanExperimental <- cleanExperimental[cleanExperimental$posttrial_GAD >= 0 & cleanExperimental$posttrial_GAD <= 21, ]
+cleanExperimental <- cleanExperimental[cleanExperimental$pretrial_STAI >= 20 & cleanExperimental$pretrial_STAI <= 80, ]
+cleanExperimental <- cleanExperimental[cleanExperimental$posttrial_STAI >= 20 & cleanExperimental$posttrial_STAI <= 80, ]
+```
+
 After the data was cleaned, the data was tested to see whether or not the distribution was normal using the Shapiro-Wilk normality test and a visualisation in histogram format.^7^ The findings show that, given the p-value is above 0.05, for the STAI data it is distributed normally, signifying the sample size is large enough and analysis can continue. While the GAD pre-trial data in both the Control & Experimental data sets was not normally distributed so the GAD assessment was discounted for this assessment.
 
 ```{r, echo=FALSE}
-# combining all the shapiro-wilks scores into one single list to convert into a table for easier display in the html doc
+### combining all the shapiro-wilks scores into one single list to convert into a table for easier display in the html doc
 listData <- c(cleanControlPreTrialGAD_SWT,cleanControlPostTrialGAD_SWT,cleanControlPreTrialSTAI_SWT,cleanControlPostTrialSTAI_SWT,cleanExperimentalPreTrialGAD_SWT, cleanExperimentalPostTrialGAD_SWT, cleanExperimentalPreTrialSTAI_SWT, cleanExperimentalPostTrialSTAI_SWT)
 
-# extracting all the names from the above list
+### extracting all the names from the above list
 nm <- names(listData)
-# the below extracts all the data from the above full list, putting each unique value under a single iteration of the heading i.e. all p-values under one p-value label
+### the below extracts all the data from the above full list, putting each unique value under a single iteration of the heading i.e. all p-values under one p-value label
 tableData <- lapply(unique(nm), function(n) unname(unlist(listData[nm %in% n])))
-# extracts all the unique names and assigns them against the tableData name position
+### extracts all the unique names and assigns them against the tableData name position
 names(tableData) <- unique(nm)
-#converts tableData from a list to a data.table 
+### converts tableData from a list to a data.table 
 tableData <- setDT(tableData)
 
 tableData[,c("data.name", "p.value")]
 
-#allows the below histograms to be displayed side by side
+### allows the below histograms to be displayed side by side
 par(mfrow = c(1,2))
 
 hist(cleanControl$pretrial_STAI, main = "Pre-Trial Control STAI", xlab = "STAI Self-Assess Score", ylab = "Number of People", col = "papayawhip", border = "hotpink")
@@ -116,7 +130,7 @@ When H~0~ and H~A~ were defined, the t-score was calculated for both the STAI re
 Beginning with the box plots, the mean difference in recorded anxiety levels pre-trial and post-trial from both control and experiment groups, already showcases a more significant change in anxiety levels within the experiment group. These results look promising; however, this assumption must be proven with more calculation.
 
 ```{r, echo=FALSE, results='hide'}
-#BOX PLOTS
+### BOX PLOTS
 boxplot(cleanControl$pretrial_STAI,cleanControl$posttrial_STAI, main = "Control Pre vs Post Trial STAI Box Plot", names = c("Pre-Trial", "Post-Trial"), ylab = "STAI Self-Assess Score", col = "papayawhip", border = "hotpink")
 
 boxplot(cleanExperimental$pretrial_STAI,cleanExperimental$posttrial_STAI, main = "Experimental Pre vs Post Trial STAI Box Plot", names = c("Pre-Trial", "Post-Trial"), ylab = "STAI Self-Assess Score", col = "lightskyblue1", border = "orchid3")

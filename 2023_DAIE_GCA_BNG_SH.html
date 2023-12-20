@@ -447,6 +447,17 @@ therapy.”</p>
 removing impossible test results, eg. Results less than or greater than
 achievable in the STAI &amp; GAD Tests. This provides a more accurate
 representation of the results from the experiment.</p>
+<pre class="r"><code>cleanControl = dataFromControl
+cleanControl &lt;- cleanControl[cleanControl$pretrial_GAD &gt;= 0 &amp; cleanControl$pretrial_GAD &lt;= 21, ]
+cleanControl &lt;- cleanControl[cleanControl$posttrial_GAD &gt;= 0 &amp; cleanControl$posttrial_GAD &lt;= 21, ]
+cleanControl &lt;- cleanControl[cleanControl$pretrial_STAI &gt;= 20 &amp; cleanControl$pretrial_STAI &lt;= 80, ]
+cleanControl &lt;- cleanControl[cleanControl$posttrial_STAI &gt;= 20 &amp; cleanControl$posttrial_STAI &lt;= 80, ]
+
+cleanExperimental = dataFromExperimental
+cleanExperimental &lt;- cleanExperimental[cleanExperimental$pretrial_GAD &gt;= 0 &amp; cleanExperimental$pretrial_GAD &lt;= 21, ]
+cleanExperimental &lt;- cleanExperimental[cleanExperimental$posttrial_GAD &gt;= 0 &amp; cleanExperimental$posttrial_GAD &lt;= 21, ]
+cleanExperimental &lt;- cleanExperimental[cleanExperimental$pretrial_STAI &gt;= 20 &amp; cleanExperimental$pretrial_STAI &lt;= 80, ]
+cleanExperimental &lt;- cleanExperimental[cleanExperimental$posttrial_STAI &gt;= 20 &amp; cleanExperimental$posttrial_STAI &lt;= 80, ]</code></pre>
 <p>After the data was cleaned, the data was tested to see whether or not
 the distribution was normal using the Shapiro-Wilk normality test and a
 visualisation in histogram format.<sup>7</sup> The findings show that,
